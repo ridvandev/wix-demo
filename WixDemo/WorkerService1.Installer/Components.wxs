@@ -1,0 +1,26 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+	<Fragment>
+		<ComponentGroup Id="ComponentsGroup" Directory="INSTALLFOLDER">
+			<Component Id="ApplicationShortcutComponent" Guid="{BE75CA17-3009-478A-83EB-3D7C6AF551C7}">
+				<Shortcut Id="ApplicationShortcut"
+						  Name="Worker Service 1"
+						  Target="[INSTALLFOLDER]\WorkerService1.exe"
+						  Directory="ProductStartMenuShortcutFolder"
+						  WorkingDirectory="INSTALLFOLDER"
+						  Icon="icon.ico"
+						  />
+
+				<RegistryValue Id="RegShortcutKey"
+							   Root="HKCU"
+							   Key="SOFTWARE\!(loc.ProductName)"
+							   Name="Shortcut"
+							   Value="1"
+							   Type="integer"
+							   KeyPath="yes"
+							   />
+				
+				<RemoveFolder Id="RemoveStartMenuShortcutMenu" Directory="ProductStartMenuShortcutFolder" On="uninstall"></RemoveFolder>
+			</Component>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

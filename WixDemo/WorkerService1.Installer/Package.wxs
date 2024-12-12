@@ -1,0 +1,43 @@
+﻿<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+  xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+	<?if $(var.Platform)=x64 ?>
+	<?define ProductCode = "{D2BA9A0C-C5AF-4A9D-8A03-FD93BEE71E76}" ?>
+	<?elseif $(var.Platform)=x86 ?>
+	<?define ProductCode = "{F2DB24AB-F320-42FD-A181-C52B09ED39D2}" ?>
+	<?elseif $(var.Platform)=ARM64 ?>
+	<?define ProductCode = "{F895E418-F734-4A7E-810C-B8A1DF2F72F3}" ?>
+	<?else?>
+	<?define ProductCode = "{E37FC9C6-C205-474A-BD01-B4AA79A36FF3}" ?>
+	<?endif?>
+	<?define UpgradeCode = "{4217A825-373F-402E-9839-E988A416A4B7}" ?>
+	<Package ProductCode="$(var.ProductCode)"
+			 Name="!(loc.ProductName_$(var.Platform))"
+			 Language="!(loc.Language)"
+			 Manufacturer="WixDemo Manufacturer"
+			 Version="$(var.BuildVersion)"
+			 UpgradeCode="$(var.UpgradeCode)"
+			 Scope="perMachine"
+			 Compressed="yes">
+		<MajorUpgrade DowngradeErrorMessage="!(loc.DowngradeError)" />
+
+		<MediaTemplate EmbedCab="yes"/>
+
+		<Icon Id="icon.ico" SourceFile="$(var.WorkerService1.ProjectDir)\app.ico" />
+
+		<Property Id="ARPPRODUCTICON" Value="icon.ico"></Property>
+
+		<ui:WixUI
+        Id="WixUI_Minimal"
+        InstallDirectory="INSTALLFOLDER"
+        />
+
+		<WixVariable Id="WixUIDialogBmp" Value="$(var.ProjectDir)\Assets\background.bmp"/>
+		<WixVariable Id="WixUIBannerBmp" Value="$(var.ProjectDir)\Assets\banner.bmp"/>
+		<WixVariable Id="WixUILicenseRtf" Value="$(var.ProjectDir)\Assets\license.rtf"/>
+
+		<Feature Id="Main">
+			<ComponentGroupRef Id="ComponentsGroup" />
+			<ComponentGroupRef Id="PublishedComponentsGroup" />
+		</Feature>
+	</Package>
+</Wix>

@@ -1,0 +1,54 @@
+﻿<Project Sdk="WixToolset.Sdk/5.0.2">
+	<PropertyGroup>
+		<OutputName>WixDemoWorkerService-$(Configuration)-$(Platform)</OutputName>
+		<Cultures>;</Cultures>
+	</PropertyGroup>
+	<ItemGroup>
+		<Content Include="Assets\background.bmp" />
+		<Content Include="Assets\banner.bmp" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="Assets\license.md" />
+		<None Include="Assets\license.rtf" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="WixToolset.Heat" Version="5.0.2" />
+		<PackageReference Include="WixToolset.UI.wixext" Version="5.0.2" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\WorkerService1\WorkerService1.csproj" />
+	</ItemGroup>
+	<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+		<Exec Command="rd /s /q ..\WorkerService1\bin\$(ConfigurationName)\net8.0\publish\win-$(PlatformName)" />
+		<Exec Command="dotnet publish ..\WorkerService1\WorkerService1.csproj -o ..\WorkerService1\bin\$(ConfigurationName)\net8.0\publish\win-$(PlatformName) -c $(ConfigurationName) -p $(PlatformName)" />
+		<GetAssemblyIdentity AssemblyFiles="..\WorkerService1\bin\$(ConfigurationName)\net8.0\publish\win-$(PlatformName)\WorkerService1.dll">
+			<Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+		</GetAssemblyIdentity>
+		<PropertyGroup>
+			<DefineConstants>BuildVersion=%(AssemblyVersion.Version)</DefineConstants>
+		</PropertyGroup>
+		<HeatDirectory
+			OutputFile="ComponentsGenerated.wxs"
+			DirectoryRefId="INSTALLFOLDER"
+			ComponentGroupName="PublishedComponentsGroup"
+			SuppressCom="true"
+			Directory="..\WorkerService1\bin\$(ConfigurationName)\net8.0\publish\win-$(PlatformName)"
+			SuppressFragments="true"
+			SuppressRegistry="true"
+			SuppressRootDirectory="true"
+			AutoGenerateGuids="false"
+			GenerateGuidsNow="true"
+			
+			/>
+	</Target>
+	<Target Name="PostBuild" BeforeTargets="PostBuildEvent">
+		<GetAssemblyIdentity AssemblyFiles="..\WorkerService1\bin\$(ConfigurationName)\net8.0\publish\win-$(PlatformName)\WorkerService1.dll">
+			<Output TaskParameter="Assemblies" ItemName="AssemblyVersion" />
+		</GetAssemblyIdentity>
+		
+		<Exec Command="if not exist Installers mkdir Installers" />
+		
+		<Exec Command="move bin\$(Platform)\$(ConfigurationName)\WixDemoWorkerService-$(Configuration)-$(Platform).msi Installers\WixDemoWorkerService-%(AssemblyVersion.Version)-$(ConfigurationName)-$(Platform).msi" />
+
+	</Target>
+</Project>

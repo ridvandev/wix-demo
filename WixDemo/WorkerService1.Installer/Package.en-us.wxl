@@ -1,0 +1,11 @@
+﻿<!--
+This file contains the declaration of all the localizable strings.
+-->
+<WixLocalization xmlns="http://wixtoolset.org/schemas/v4/wxl" Culture="en-US">
+	<String Id="DowngradeError" Value="A newer version of Wix Demo Worker Service is already installed." />
+	<String Id="ProductName" Value="Wix Demo Worker Service"/>
+	<String Id="ProductName_x86" Value="Wix Demo Worker Service (32bit)"/>
+	<String Id="ProductName_x64" Value="Wix Demo Worker Service (64bit)"/>
+	<String Id="ProductName_ARM64" Value="Wix Demo Worker Service (ARM64)"/>
+	<String Id="Language" Value="1033"/>
+</WixLocalization>
